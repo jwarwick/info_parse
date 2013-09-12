@@ -12,11 +12,9 @@ defmodule Mix.Tasks.Db.Create do
   def run(args) do
     Mix.shell.info "Creating database tables..."
     Mix.Task.run "app.start", args
+    Mix.Task.run "db.drop", args
     queries = 
       [
-       "DROP TABLE student",
-       "DROP TABLE parent",
-       "DROP TABLE address",
        "CREATE TABLE IF NOT EXISTS student (id serial PRIMARY KEY, firstname text, lastname text)",
        "CREATE TABLE IF NOT EXISTS parent (id serial PRIMARY KEY, firstname text, lastname text, email text, phone text)",
        "CREATE TABLE IF NOT EXISTS address (id serial PRIMARY KEY, phone text, address1 text, address2 text, city text, state text)"
