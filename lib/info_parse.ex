@@ -6,6 +6,7 @@ defmodule InfoParse do
   application and its Dynamos.
   """
   def start(_type, _args) do
-    InfoParse.Dynamo.start_link([max_restarts: 5, max_seconds: 5])
+    InfoParse.Supervisor.start_link([max_restarts: 5, max_seconds: 5])
+    # InfoParse.Dynamo.start_link([max_restarts: 5, max_seconds: 5])
   end
 end
