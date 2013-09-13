@@ -31,11 +31,19 @@ defmodule InfoParse.Directory do
     IO.inspect notes
 
     {parents, children} = partition_parents(not_notes)
+    parents = chunks_by_number(parents)
+    children = chunks_by_number(children)
+
     IO.puts "Parents:"
     IO.inspect parents
 
     IO.puts "Children:"
     IO.inspect children
+  end
+
+  # assumes list is ordered (ie [{a1, v}, {b1, v}, {a2, v}, {b2, v}]
+  defp chunks_by_number(list) do
+    Enum.chunks_by(list, fn({k, _v}) -> String.last(k) end)
   end
 
   defp partition_notes(list) do
