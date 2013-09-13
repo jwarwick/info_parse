@@ -27,12 +27,17 @@ defmodule InfoParse.Directory do
     IO.inspect result
     
     {notes, not_notes} = partition_notes(result)
+    notes = Enum.map(notes, &decode_element(&1))
     IO.puts "Notes:"
     IO.inspect notes
 
     {parents, children} = partition_parents(not_notes)
     parents = chunks_by_number(parents)
+    parents = lc p inlist parents, do: Enum.map(p, &decode_element(&1))
+
     children = chunks_by_number(children)
+    children = lc c inlist children, do: Enum.map(c, &decode_element(&1))
+    children = lc c inlist children, do: Enum.map(c, &make_reference(&1))
 
     IO.puts "Parents:"
     IO.inspect parents
@@ -53,6 +58,26 @@ defmodule InfoParse.Directory do
   defp partition_parents(list) do
     Enum.partition(list, fn({k, _v}) -> String.starts_with?(k, "parent") end)
   end
+
+  defp make_reference({k, v}) when k in ["classroom", "bus"] do
+    {i, _rest} = String.to_integer(v)
+    {k, i}
+  end
+  defp make_reference(x), do: x
+
+  defp decode_element({k, v}) do
+    {strip_key(k), cleanup_value(v)}
+  end
+
+  defp cleanup_value(v) do
+    v 
+      |> URI.decode 
+      |> String.strip 
+      |> String.replace("Street", "St")
+      |> String.replace("Road", "Rd")
+  end
+
+  defp strip_key(key), do: String.replace(key, %r/-[0-9]+$/, "")
 
   defp tupleize([a, b]), do: {a, b}
 
