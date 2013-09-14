@@ -4,6 +4,8 @@ defmodule InfoGather.StudentModel do
   queryable "student" do
     field :firstname, :string    
     field :lastname, :string    
+    field :bus_id, :integer
+    field :classroom_id, :integer
   end
 end
 
@@ -15,6 +17,7 @@ defmodule InfoGather.ParentModel do
     field :lastname, :string    
     field :email, :string    
     field :phone, :string    
+    field :address_id, :integer
   end
 end
 

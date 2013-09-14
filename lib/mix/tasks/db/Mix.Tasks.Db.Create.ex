@@ -15,9 +15,9 @@ defmodule Mix.Tasks.Db.Create do
     Mix.Task.run "db.drop", args
     queries = 
       [
-       "CREATE TABLE IF NOT EXISTS student (id serial PRIMARY KEY, firstname text, lastname text)",
-       "CREATE TABLE IF NOT EXISTS parent (id serial PRIMARY KEY, firstname text, lastname text, email text, phone text)",
-       "CREATE TABLE IF NOT EXISTS address (id serial PRIMARY KEY, phone text, address1 text, address2 text, city text, state text)"
+       "CREATE TABLE IF NOT EXISTS student (id serial PRIMARY KEY, firstname text, lastname text, bus_id integer, classroom_id integer)",
+       "CREATE TABLE IF NOT EXISTS address (id serial PRIMARY KEY, phone text, address1 text, address2 text, city text, state text)",
+       "CREATE TABLE IF NOT EXISTS parent (id serial PRIMARY KEY, firstname text, lastname text, email text, phone text, address_id integer)"
       ]
     Enum.each queries, fn(sql) ->
       Mix.shell.info "Executing: #{sql}"
