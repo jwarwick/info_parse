@@ -2,7 +2,7 @@ defmodule Mix.Tasks.Db.Drop do
   use Mix.Task
   alias Ecto.Adapters.Postgres
 
-  require InfoParse.Repo
+  require InfoGather.Repo
 
   @shortdoc "Drop required database tables"
 
@@ -20,7 +20,7 @@ defmodule Mix.Tasks.Db.Drop do
       ]
     Enum.each queries, fn(sql) ->
       Mix.shell.info "Executing: #{sql}"
-      result = Postgres.query(InfoParse.Repo, sql)
+      result = Postgres.query(InfoGather.Repo, sql)
       IO.inspect result
     end
   end

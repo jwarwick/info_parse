@@ -2,7 +2,7 @@ defmodule Mix.Tasks.Db.Create do
   use Mix.Task
   alias Ecto.Adapters.Postgres
 
-  require InfoParse.Repo
+  require InfoGather.Repo
 
   @shortdoc "Create required database tables (doesn't populate them)"
 
@@ -21,7 +21,7 @@ defmodule Mix.Tasks.Db.Create do
       ]
     Enum.each queries, fn(sql) ->
       Mix.shell.info "Executing: #{sql}"
-      result = Postgres.query(InfoParse.Repo, sql)
+      result = Postgres.query(InfoGather.Repo, sql)
       IO.inspect result
     end
   end

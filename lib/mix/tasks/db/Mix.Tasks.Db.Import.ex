@@ -2,7 +2,7 @@ defmodule Mix.Tasks.Db.Import do
   use Mix.Task
   alias Ecto.Adapters.Postgres
 
-  require InfoParse.Repo
+  require InfoGather.Repo
 
   @shortdoc "Import directory info from the infogather database"
 

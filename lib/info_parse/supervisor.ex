@@ -7,7 +7,6 @@ defmodule InfoParse.Supervisor do
 
   def init(_args) do
     children = [ 
-      worker(InfoParse.Repo, []),
       worker(InfoGather.Repo, []),
       supervisor(InfoParse.Dynamo, []) 
       ]

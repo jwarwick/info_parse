@@ -15,13 +15,5 @@ To import the capture into postgres:
 This application assumes you have a database `infogather` created which holds the tables defined in the
 `info_gather` project.
 
-This application uses a new database called `infoparse`.
-
-``` sql
-
- CREATE DATABASE infoparse;
-
-```
-
 There is a mix helper defined to create the required tables. Run `mix db.create`.
 
