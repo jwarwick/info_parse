@@ -18,6 +18,7 @@ defmodule InfoGather.ParentModel do
     field :email, :string    
     field :phone, :string    
     field :address_id, :integer
+    field :notes, :string
   end
 end
 
@@ -32,3 +33,13 @@ defmodule InfoGather.AddressModel do
     field :state, :string    
   end
 end
+
+defmodule InfoGather.StudentParentModel do
+  use Ecto.Model
+
+  queryable "student_parent" do
+    field :student_id, :integer
+    field :parent_id, :integer
+  end
+end
+

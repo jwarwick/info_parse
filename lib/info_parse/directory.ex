@@ -26,19 +26,12 @@ defmodule InfoParse.Directory do
     IO.inspect result
     
     {notes, not_notes} = partition_notes(result)
-    notes = 
-      notes 
-      |> Enum.map(&decode_element(&1))
-      |> Enum.map(&make_atom(&1))
-
-    IO.puts "Notes:"
-    IO.inspect notes
-
     {parents, children} = partition_parents(not_notes)
 
     parents = chunks_by_number(parents)
     parents = lc p inlist parents do
       p
+        |> Enum.concat(notes)
         |> Enum.map(&decode_element(&1))
         |> Enum.map(&make_atom(&1))
     end
@@ -53,6 +46,8 @@ defmodule InfoParse.Directory do
 
     child_ids = Enum.map children, &add_student(&1)
     parent_ids = Enum.map parents, &add_parent(&1)
+
+    lc c inlist child_ids, p inlist parent_ids, do: add_student_parent(c, p)
 
     IO.puts "Parents:"
     IO.inspect parents
@@ -82,11 +77,14 @@ defmodule InfoParse.Directory do
 
     parent = InfoGather.ParentModel.new(firstname: p[:"parent-firstname"],
       lastname: p[:"parent-lastname"], email: p[:"parent-email"], phone: p[:"parent-mobile"],
-        address_id: address_id)
+        address_id: address_id, notes: p[:notes])
     parent = InfoGather.Repo.create(parent)
-    IO.puts "uploaded parent:"
-    IO.inspect parent
     parent.primary_key
+  end
+
+  defp add_student_parent(s, p) do
+    sp = InfoGather.StudentParentModel.new(student_id: s, parent_id: p)
+    InfoGather.Repo.create(sp)
   end
 
   # assumes list is ordered (ie [{a1, v}, {b1, v}, {a2, v}, {b2, v}]

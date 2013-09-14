@@ -17,6 +17,7 @@ defmodule Mix.Tasks.Db.Drop do
        "DROP TABLE student",
        "DROP TABLE parent",
        "DROP TABLE address",
+       "DROP TABLE student_parent",
       ]
     Enum.each queries, fn(sql) ->
       Mix.shell.info "Executing: #{sql}"
