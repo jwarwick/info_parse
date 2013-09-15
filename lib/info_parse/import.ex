@@ -45,7 +45,11 @@ defmodule InfoParse.Import do
     end
 
     child_ids = Enum.map children, &add_student(&1)
-    parent_ids = Enum.map parents, &add_parent(&1)
+    parent_address_ids = Enum.map parents, &add_parent(&1)
+    parent_ids = Enum.reduce parent_address_ids, [], fn ({pid, _}, acc) -> [pid | acc] end
+
+    Enum.reduce parent_address_ids, nil, &update_address_id(&1, &2)
+      
 
     lc c inlist child_ids, p inlist parent_ids, do: add_student_parent(c, p)
 
@@ -79,13 +83,22 @@ defmodule InfoParse.Import do
       lastname: p[:"parent-lastname"], email: p[:"parent-email"], phone: p[:"parent-mobile"],
         address_id: address_id, notes: p[:notes])
     parent = InfoGather.Repo.create(parent)
-    parent.primary_key
+    {parent.primary_key, address_id}
   end
 
   defp add_student_parent(s, p) do
     sp = InfoGather.StudentParentModel.new(student_id: s, parent_id: p)
     InfoGather.Repo.create(sp)
   end
+
+  defp update_address_id({pid, nil}, last_addr_id) do
+    query = from p in InfoGather.ParentModel, where: p.id == ^pid
+    [parent] = InfoGather.Repo.all(query)
+    parent = parent.address_id(last_addr_id)
+    InfoGather.Repo.update(parent)
+    last_addr_id
+  end
+  defp update_address_id({_pid, addr_id}, _last_addr_id), do: addr_id
 
   # assumes list is ordered (ie [{a1, v}, {b1, v}, {a2, v}, {b2, v}]
   defp chunks_by_number(list) do
