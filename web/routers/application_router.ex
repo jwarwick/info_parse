@@ -13,7 +13,10 @@ defmodule ApplicationRouter do
   # forward "/posts", to: PostsRouter
 
   get "/" do
-    conn = conn.assign(:title, "Welcome to Dynamo!")
+    conn = conn.assign(:title, "School Directory")
+    conn = conn.assign(:classrooms, InfoParse.Directory.ordered_classrooms)
     render conn, "index.html"
   end
+
+  def get_students(classroom_id), do: InfoParse.Directory.ordered_students(classroom_id)
 end

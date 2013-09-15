@@ -16,7 +16,7 @@ defmodule Mix.Tasks.Db.Import do
     Mix.Task.run "db.create", args
 
     Mix.shell.info "Importing data from infogather..."
-    InfoParse.Directory.import_data
+    InfoParse.Import.import_data
   end
 end
 

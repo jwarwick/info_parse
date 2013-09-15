@@ -2,14 +2,40 @@
 <html>
 <head>
   <title><%= @title %></title>
-  <link rel="shortcut icon" href="/static/favicon.ico" />
 </head>
 <body>
-  <h3>Welcome to Dynamo!</h3>
-  <ol>
-    <li>Change this template at <code>web/templates/index.html.eex</code></li>
-    <li>Add new routes at <code>web/routers/application_router.ex</code></li>
-    <li>Deploy to production with <code>MIX_ENV=prod mix do compile, server</code></li>
-  </ol>
+  <%= lc {class_id, class_name} inlist @classrooms do %>
+    <h2 class="classroom_name"><%= class_name %></h2>
+
+    <%= lc student_id inlist InfoParse.Directory.ordered_students(class_id) do %>
+      <%# Student Information %>
+      <% {student_last, student_first, student_bus} = InfoParse.Directory.get_student(student_id) %>
+      <h3 class="student_name"><%= student_first %> <%= student_last %></h3>
+      <%= if student_bus do %>
+       <p class="student_bus"><%= student_bus %></p>
+      <% end %>
+
+      <%# Parent Information %>
+      <% parent_list = InfoParse.Directory.get_parents(student_id) %>
+      <%= lc {last, first, email, phone, addr_id, notes} inlist parent_list do %>
+        <h4 class="parent_name"><%= first %> <%= last %></h4>
+        <p class="email_mobile">
+        <%= if email do %>
+          <span class="email"><%= email %></span>
+        <% end %>
+        <%= if phone do %>
+          <span class="mobile"><%= phone %></span>
+        <% end %>
+        </p>
+
+        <%= if notes do %>
+        <p style="color:red"><%= notes %></p>
+        <% end %>
+      <% end %>
+
+      <br>
+    <% end %>
+
+  <% end %>
 </body>
 </html>
