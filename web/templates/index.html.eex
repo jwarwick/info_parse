@@ -35,7 +35,7 @@
           <% end %>
         <% end %>
 
-      <% {phone, addr1, addr2, city, state} = address %>
+      <% {phone, addr1, addr2, city, state, zip} = address %>
       <p class="address">
         <%= if addr1 do %>
           <p class="address_line"><%= addr1 %></p>
@@ -43,10 +43,10 @@
         <%= if addr2 do %>
           <p class="address_line"><%= addr2 %></p>
         <% end %>
-        <%= if city && state do %>
-          <p class="address_line"><%= city %>,  <%= state %></p>
+        <%= unless 0 == String.length(city) && 0 == String.length(state) do %>
+          <p class="address_line"><%= city %>, <%= state %>  <%= zip %></p>
         <% end %>
-        <%= if phone do %>
+        <%= unless 0 == String.length(phone) do %>
           <p class="phone_line">Home Phone: <%= phone %></p>
         <% end %>
       </p>

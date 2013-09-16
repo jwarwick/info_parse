@@ -31,6 +31,7 @@ defmodule InfoGather.AddressModel do
     field :address2, :string    
     field :city, :string    
     field :state, :string    
+    field :zip, :string
   end
 end
 

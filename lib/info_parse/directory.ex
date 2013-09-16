@@ -28,6 +28,8 @@ defmodule InfoParse.Directory do
     {last, first, get_bus(bus_id)}
   end
 
+  def get_bus(nil), do: nil
+  def get_bus(:null), do: nil
   def get_bus(id) do
     query = from(b in InfoGather.BusModel,
                  where: b.id == ^id,
@@ -46,7 +48,7 @@ defmodule InfoParse.Directory do
                  join: p in InfoGather.ParentModel, on: sp.parent_id == p.id,
                  order_by: [p.lastname, p.firstname],
                  select: {p.lastname, p.firstname, p.email, p.phone, p.address_id, p.notes})
-    result = InfoGather.Repo.all(query)
+    InfoGather.Repo.all(query)
       |> Enum.chunks_by(fn({_, _, _, _, addr_id, _}) -> addr_id end)
       |> Enum.map(&add_address(&1))
   end
@@ -60,7 +62,7 @@ defmodule InfoParse.Directory do
   def get_address(id) do
     query = from(a in InfoGather.AddressModel,
                  where: a.id == ^id,
-                 select: {a.phone, a.address1, a.address2, a.city, a.state})
+                 select: {a.phone, a.address1, a.address2, a.city, a.state, a.zip})
     [result] = InfoGather.Repo.all(query)
     result
   end

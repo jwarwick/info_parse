@@ -44,8 +44,11 @@ defmodule InfoParse.Import do
         |> Enum.map(&make_atom(&1))
     end
 
-    child_ids = Enum.map children, &add_student(&1)
-    parent_address_ids = Enum.map parents, &add_parent(&1)
+    child_ids = Enum.map(children, &add_student(&1))
+      |> Enum.filter(fn(x) -> x end)
+    
+    parent_address_ids = Enum.map(parents, &add_parent(&1))
+      |> Enum.filter(fn(x) -> x end)
     parent_ids = Enum.reduce parent_address_ids, [], fn ({pid, _}, acc) -> [pid | acc] end
 
     Enum.reduce parent_address_ids, nil, &update_address_id(&1, &2)
@@ -64,26 +67,34 @@ defmodule InfoParse.Import do
   end
 
   defp add_student(c) do
-    student = InfoGather.StudentModel.new(firstname: c[:firstname],
-      lastname: c[:lastname], classroom_id: c[:classroom], bus_id: c[:bus])
-    student = InfoGather.Repo.create(student)
-    student.primary_key
+    if 0 == String.length(c[:firstname]) && 0 == String.length(c[:lastname]) do
+      nil
+    else
+      student = InfoGather.StudentModel.new(firstname: c[:firstname],
+        lastname: c[:lastname], classroom_id: c[:classroom], bus_id: c[:bus])
+      student = InfoGather.Repo.create(student)
+      student.primary_key
+    end
   end
 
   defp add_parent(p) do
-    address_id = if p[:"parent-addr1"] do
-      address = InfoGather.AddressModel.new(phone: p[:"parent-tel"],
-        address1: p[:"parent-addr1"], address2: p[:"parent-addr2"], 
-        city: p[:"parent-city"], state: p[:"parent-state"])
-      address = InfoGather.Repo.create(address)
-      address.primary_key
-    end
+    if 0 == String.length(p[:"parent-firstname"]) && 0 == String.length(p[:"parent-lastname"]) do
+      nil
+    else
+      address_id = if p[:"parent-addr1"] do
+        address = InfoGather.AddressModel.new(phone: p[:"parent-tel"],
+          address1: p[:"parent-addr1"], address2: p[:"parent-addr2"], 
+          city: p[:"parent-city"], state: p[:"parent-state"], zip: p[:"parent-zip"])
+        address = InfoGather.Repo.create(address)
+        address.primary_key
+      end
 
-    parent = InfoGather.ParentModel.new(firstname: p[:"parent-firstname"],
-      lastname: p[:"parent-lastname"], email: p[:"parent-email"], phone: p[:"parent-mobile"],
+      parent = InfoGather.ParentModel.new(firstname: p[:"parent-firstname"],
+        lastname: p[:"parent-lastname"], email: p[:"parent-email"], phone: p[:"parent-mobile"],
         address_id: address_id, notes: p[:notes])
-    parent = InfoGather.Repo.create(parent)
-    {parent.primary_key, address_id}
+      parent = InfoGather.Repo.create(parent)
+      {parent.primary_key, address_id}
+    end
   end
 
   defp add_student_parent(s, p) do
@@ -114,8 +125,11 @@ defmodule InfoParse.Import do
   end
 
   defp make_reference({k, v}) when k in ["classroom", "bus"] do
-    {i, _rest} = String.to_integer(v)
-    {k, i}
+    result = String.to_integer(v)
+    case result do 
+      {i, _rest} -> {k, i}
+      :error -> {k, nil}
+    end
   end
   defp make_reference(x), do: x
 
