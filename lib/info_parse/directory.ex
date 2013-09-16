@@ -47,10 +47,14 @@ defmodule InfoParse.Directory do
                  order_by: [p.lastname, p.firstname],
                  select: {p.lastname, p.firstname, p.email, p.phone, p.address_id, p.notes})
     result = InfoGather.Repo.all(query)
+      |> Enum.chunks_by(fn({_, _, _, _, addr_id, _}) -> addr_id end)
+      |> Enum.map(&add_address(&1))
+  end
 
-    IO.inspect result
-    result
-          
+  defp add_address(parent_list) do
+    {_last, _first, _email, _phone, addr_id, _notes} = hd parent_list
+    address = get_address(addr_id)
+    {parent_list, address}
   end
 
   def get_address(id) do

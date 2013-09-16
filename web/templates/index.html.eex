@@ -17,22 +17,41 @@
 
       <%# Parent Information %>
       <% parent_list = InfoParse.Directory.get_parents(student_id) %>
-      <%= lc {last, first, email, phone, addr_id, notes} inlist parent_list do %>
-        <h4 class="parent_name"><%= first %> <%= last %></h4>
-        <p class="email_mobile">
-        <%= if email do %>
-          <span class="email"><%= email %></span>
+      <%= lc parent_group inlist parent_list do %>
+        <% {parent_names, address} = parent_group %>
+        <%= lc {last, first, email, phone, _addr_id, notes} inlist parent_names do %>
+          <h4 class="parent_name"><%= first %> <%= last %></h4>
+          <p class="email_mobile">
+            <%= if email do %>
+              <span class="email"><%= email %></span>
+            <% end %>
+            <%= if phone do %>
+              <span class="mobile"><%= phone %></span>
+            <% end %>
+          </p>
+
+          <%= if notes do %>
+            <p style="color:red"><%= notes %></p>
+          <% end %>
+        <% end %>
+
+      <% {phone, addr1, addr2, city, state} = address %>
+      <p class="address">
+        <%= if addr1 do %>
+          <p class="address_line"><%= addr1 %></p>
+        <% end %>
+        <%= if addr2 do %>
+          <p class="address_line"><%= addr2 %></p>
+        <% end %>
+        <%= if city && state do %>
+          <p class="address_line"><%= city %>,  <%= state %></p>
         <% end %>
         <%= if phone do %>
-          <span class="mobile"><%= phone %></span>
+          <p class="phone_line">Home Phone: <%= phone %></p>
         <% end %>
-        </p>
+      </p>
 
-        <%= if notes do %>
-        <p style="color:red"><%= notes %></p>
-        <% end %>
       <% end %>
-
       <br>
     <% end %>
 
