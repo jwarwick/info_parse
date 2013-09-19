@@ -147,24 +147,55 @@ defmodule InfoParse.Import do
 
   defp key_specific_cleanup(v, k) when k in ["parent-addr1", "parent-addr2"] do
     v
+      |> capitalize_all_words()
       |> String.replace("Street", "St")
       |> String.replace("Road", "Rd")
+      |> String.replace("Drive", "Dr")
       |> String.replace("Rd.", "Rd")
       |> String.replace("St.", "St")
+      |> String.replace("Dr.", "Dr")
+  end
+
+  defp key_specific_cleanup(v, k) when k in ["parent-city"] do
+    v
+      |> capitalize_all_words()
   end
 
   defp key_specific_cleanup(v, k) when k in ["parent-mobile", "parent-tel"] do
-    v = String.replace(v, ".", "-")
+    v = String.replace(v, %r/[\\.\\(\\)\s\\-]/, "")
     if 10 == String.length(v) do
       a = String.slice(v, 0, 3)
       b = String.slice(v, 3, 3)
       c = String.slice(v, 6, 4)
       v = Enum.join [a, b, c], "-"
     end
+
+    if 7 == String.length(v) do
+      a = String.slice(v, 0, 3)
+      b = String.slice(v, 3, 4)
+      v = Enum.join [a, b], "-"
+    end
+    v
+  end
+
+  defp key_specific_cleanup(v, k) when k in ["parent-state"] do
+    newV = v 
+           |> String.replace(%r/[Mm]assachusetts/, "")
+           |> String.replace(%r/[\s\\-]/, "")
+    if String.length(newV) != String.length(v) do
+      v = "MA"
+    end
     v
   end
 
   defp key_specific_cleanup(v, _k), do: v
+
+  defp capitalize_all_words(s) do
+    s
+      |> String.split()
+      |> Enum.map(&String.capitalize(&1))
+      |> Enum.join(" ")
+  end
 
   defp make_atom({k, v}), do: {binary_to_atom(k), v}
 
