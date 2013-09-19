@@ -134,16 +134,37 @@ defmodule InfoParse.Import do
   defp make_reference(x), do: x
 
   defp decode_element({k, v}) do
-    {strip_key(k), cleanup_value(v)}
+    stripped = strip_key(k)
+    {stripped, cleanup_value(v) |> key_specific_cleanup(stripped)}
   end
 
   defp cleanup_value(v) do
     v 
       |> URI.decode 
       |> String.strip 
+  end
+
+
+  defp key_specific_cleanup(v, k) when k in ["parent-addr1", "parent-addr2"] do
+    v
       |> String.replace("Street", "St")
       |> String.replace("Road", "Rd")
+      |> String.replace("Rd.", "Rd")
+      |> String.replace("St.", "St")
   end
+
+  defp key_specific_cleanup(v, k) when k in ["parent-mobile", "parent-tel"] do
+    v = String.replace(v, ".", "-")
+    if 10 == String.length(v) do
+      a = String.slice(v, 0, 3)
+      b = String.slice(v, 3, 3)
+      c = String.slice(v, 6, 4)
+      v = Enum.join [a, b, c], "-"
+    end
+    v
+  end
+
+  defp key_specific_cleanup(v, _k), do: v
 
   defp make_atom({k, v}), do: {binary_to_atom(k), v}
 

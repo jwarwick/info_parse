@@ -2,56 +2,65 @@
 <html>
 <head>
   <title><%= @title %></title>
+  <style>
+    .all_parents_div {margin-left: 50px;}
+  </style>
 </head>
 <body>
   <%= lc {class_id, class_name} inlist @classrooms do %>
     <h2 class="classroom_name"><%= class_name %></h2>
 
     <%= lc student_id inlist InfoParse.Directory.ordered_students(class_id) do %>
-      <%# Student Information %>
-      <% {student_last, student_first, student_bus} = InfoParse.Directory.get_student(student_id) %>
-      <h3 class="student_name"><%= student_first %> <%= student_last %></h3>
-      <%= if student_bus do %>
-       <p class="student_bus"><%= student_bus %></p>
-      <% end %>
+      <div class="student_div">
+        <%# Student Information %>
+        <% {student_last, student_first, student_bus} = InfoParse.Directory.get_student(student_id) %>
+        <h3 class="student_name"><%= student_first %> <%= student_last %></h3>
+        <%= if student_bus do %>
+         <p class="student_bus"><%= student_bus %></p>
+        <% end %>
+      </div>
 
-      <%# Parent Information %>
-      <% parent_list = InfoParse.Directory.get_parents(student_id) %>
-      <%= lc parent_group inlist parent_list do %>
-        <% {parent_names, address} = parent_group %>
-        <%= lc {last, first, email, phone, _addr_id, notes} inlist parent_names do %>
-          <h4 class="parent_name"><%= first %> <%= last %></h4>
-          <p class="email_mobile">
-            <%= if email do %>
-              <span class="email"><%= email %></span>
+      <div class="all_parents_div">
+        <%# Parent Information %>
+        <% parent_list = InfoParse.Directory.get_parents(student_id) %>
+        <%= lc parent_group inlist parent_list do %>
+          <div class="parent-div">
+            <% {parent_names, address} = parent_group %>
+            <%= lc {last, first, email, phone, _addr_id, notes} inlist parent_names do %>
+              <h4 class="parent_name"><%= first %> <%= last %></h4>
+              <p class="email_mobile">
+                <%= if email do %>
+                  <span class="email"><%= email %></span>
+                <% end %>
+                <%= if phone do %>
+                  <span class="mobile"><%= phone %></span>
+                <% end %>
+              </p>
+
+              <%= if notes do %>
+                <p style="color:red"><%= notes %></p>
+              <% end %>
             <% end %>
-            <%= if phone do %>
-              <span class="mobile"><%= phone %></span>
+
+          <% {phone, addr1, addr2, city, state, zip} = address %>
+          <div class="address">
+            <%= if addr1 do %>
+              <p class="address_line"><%= addr1 %></p>
             <% end %>
-          </p>
+            <%= if addr2 do %>
+              <p class="address_line"><%= addr2 %></p>
+            <% end %>
+            <%= unless 0 == String.length(city) && 0 == String.length(state) do %>
+              <p class="address_line"><%= city %>, <%= state %>  <%= zip %></p>
+            <% end %>
+            <%= unless 0 == String.length(phone) do %>
+              <p class="phone_line">Home Phone: <%= phone %></p>
+            <% end %>
+          </div>
+        </div>
 
-          <%= if notes do %>
-            <p style="color:red"><%= notes %></p>
-          <% end %>
         <% end %>
-
-      <% {phone, addr1, addr2, city, state, zip} = address %>
-      <p class="address">
-        <%= if addr1 do %>
-          <p class="address_line"><%= addr1 %></p>
-        <% end %>
-        <%= if addr2 do %>
-          <p class="address_line"><%= addr2 %></p>
-        <% end %>
-        <%= unless 0 == String.length(city) && 0 == String.length(state) do %>
-          <p class="address_line"><%= city %>, <%= state %>  <%= zip %></p>
-        <% end %>
-        <%= unless 0 == String.length(phone) do %>
-          <p class="phone_line">Home Phone: <%= phone %></p>
-        <% end %>
-      </p>
-
-      <% end %>
+      </div>
       <br>
     <% end %>
 
