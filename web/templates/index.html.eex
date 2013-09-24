@@ -28,14 +28,12 @@
             <% {parent_names, address} = parent_group %>
             <%= lc {last, first, email, phone, _addr_id, notes} inlist parent_names do %>
               <h4 class="parent_name"><%= first %> <%= last %></h4>
-              <p class="email_mobile">
-                <%= if email do %>
-                  <span class="email"><%= email %></span>
-                <% end %>
-                <%= if phone do %>
-                  <span class="mobile"><%= phone %></span>
-                <% end %>
-              </p>
+              <%= if email do %>
+                <div class="email"><%= email %></div>
+              <% end %>
+              <%= unless 0 == String.length(phone) do %>
+                <div class="mobile">Cell: <%= phone %></div>
+              <% end %>
 
               <%= if notes do %>
                 <p style="color:red"><%= notes %></p>
@@ -45,16 +43,16 @@
           <% {phone, addr1, addr2, city, state, zip} = address %>
           <div class="address">
             <%= if addr1 do %>
-              <p class="address_line"><%= addr1 %></p>
+              <div class="address_line"><%= addr1 %></div>
             <% end %>
             <%= if addr2 do %>
-              <p class="address_line"><%= addr2 %></p>
+              <div class="address_line"><%= addr2 %></div>
             <% end %>
             <%= unless 0 == String.length(city) && 0 == String.length(state) do %>
-              <p class="address_line"><%= city %>, <%= state %>  <%= zip %></p>
+              <div class="address_line"><%= city %>, <%= state %>  <%= zip %></div>
             <% end %>
             <%= unless 0 == String.length(phone) do %>
-              <p class="phone_line">Home Phone: <%= phone %></p>
+              <div class="phone_line">Home Phone: <%= phone %></div>
             <% end %>
           </div>
         </div>

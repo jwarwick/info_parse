@@ -154,6 +154,7 @@ defmodule InfoParse.Import do
       |> String.replace("Rd.", "Rd")
       |> String.replace("St.", "St")
       |> String.replace("Dr.", "Dr")
+      |> String.replace(%r/[Pp][\\.]?[Oo][\\.]?\s+/, "PO ")
   end
 
   defp key_specific_cleanup(v, k) when k in ["parent-city"] do
@@ -162,6 +163,7 @@ defmodule InfoParse.Import do
   end
 
   defp key_specific_cleanup(v, k) when k in ["parent-mobile", "parent-tel"] do
+    v = String.lstrip(v, ?1)
     v = String.replace(v, %r/[\\.\\(\\)\s\\-]/, "")
     if 10 == String.length(v) do
       a = String.slice(v, 0, 3)
