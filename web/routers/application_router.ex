@@ -18,5 +18,17 @@ defmodule ApplicationRouter do
     render conn, "index.html"
   end
 
+  get "/students" do
+    conn = conn.assign(:title, "Students")
+    conn = conn.assign(:students, InfoParse.Directory.ordered_students)
+    render conn, "students.html"
+  end
+
+  get "/parents" do
+    conn = conn.assign(:title, "Parents")
+    conn = conn.assign(:parents, InfoParse.Directory.ordered_parents)
+    render conn, "parents.html"
+  end
+
   def get_students(classroom_id), do: InfoParse.Directory.ordered_students(classroom_id)
 end

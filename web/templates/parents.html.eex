@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title><%= @title %></title>
+</head>
+<body>
+  <h1>Parents (<%= Enum.count @parents %>)</h1>
+  <%= lc parent_id inlist @parents do %>
+    <% {parent_last, parent_first} = InfoParse.Directory.get_parent(parent_id) %>
+    <div>
+      <a href="/parent/<%= parent_id%>" class="parent_name"><%= parent_last %>, <%= parent_first %> </a>
+    </div>
+  <% end %>
+</body>
+</html>

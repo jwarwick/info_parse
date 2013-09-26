@@ -12,6 +12,13 @@ defmodule InfoParse.Directory do
     InfoGather.Repo.all(query)
   end
 
+  def ordered_students do
+    query = from(s in InfoGather.StudentModel,
+                 order_by: [s.lastname, s.firstname],
+                 select: s.id)
+    InfoGather.Repo.all(query)
+  end
+
   def ordered_students(class_id) do
     query = from(s in InfoGather.StudentModel,
                  where: s.classroom_id == ^class_id,
@@ -40,6 +47,21 @@ defmodule InfoParse.Directory do
     else
       hd result
     end
+  end
+
+  def ordered_parents do
+    query = from(p in InfoGather.ParentModel,
+                 order_by: [p.lastname, p.firstname],
+                 select: p.id)
+    InfoGather.Repo.all(query)
+  end
+
+  def get_parent(parent_id) do
+    query = from(s in InfoGather.ParentModel,
+                 where: s.id == ^parent_id,
+                 select: {s.lastname, s.firstname})
+    [result] = InfoGather.Repo.all(query)
+    result
   end
 
   def get_parents(student_id) do
