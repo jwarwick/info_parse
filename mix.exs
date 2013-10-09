@@ -8,6 +8,8 @@ defmodule InfoParse.Mixfile do
       compilers: [:elixir, :dynamo, :app],
       env: [prod: [compile_path: "ebin"]],
       compile_path: "tmp/#{Mix.env}/info_parse/ebin",
+      name: "Info Parser",
+      source_url: "https://github.com/jwarwick/info_parse",
       deps: deps ]
   end
 
@@ -23,7 +25,8 @@ defmodule InfoParse.Mixfile do
       { :dynamo, github: "elixir-lang/dynamo" },
       { :ecto, github: "elixir-lang/ecto" },
       { :pgsql, github: "semiocast/pgsql" },
-      { :exjson, github: "guedes/exjson" }
+      { :exjson, github: "guedes/exjson" },
+      { :ex_doc, github: "elixir-lang/ex_doc" }
     ]
   end
 end
