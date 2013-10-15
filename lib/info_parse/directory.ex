@@ -19,9 +19,10 @@ defmodule InfoParse.Directory do
     InfoGather.Repo.all(query)
   end
 
-  def ordered_students(class_id) do
+  def ordered_students(class_id, start_student_id) do
     query = from(s in InfoGather.StudentModel,
                  where: s.classroom_id == ^class_id,
+                 where: s.id >= ^start_student_id,
                  order_by: [s.lastname, s.firstname],
                  select: s.id)
     InfoGather.Repo.all(query)
