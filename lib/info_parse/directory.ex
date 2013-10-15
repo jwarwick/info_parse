@@ -12,13 +12,16 @@ defmodule InfoParse.Directory do
     InfoGather.Repo.all(query)
   end
 
-  def ordered_students do
+  def ordered_students, do: ordered_students(0)
+  def ordered_students(start_student_id) do
     query = from(s in InfoGather.StudentModel,
+                 where: s.id >= ^start_student_id,
                  order_by: [s.lastname, s.firstname],
                  select: s.id)
     InfoGather.Repo.all(query)
   end
 
+  def ordered_students(class_id, nil), do: ordered_students(class_id, 0)
   def ordered_students(class_id, start_student_id) do
     query = from(s in InfoGather.StudentModel,
                  where: s.classroom_id == ^class_id,

@@ -9,6 +9,7 @@
     <li><a href="/directory">Student Directory</a></li>
     <li><a href="/directory/0">Partial Student Directory</a></li>
     <li><a href="/students">All Students</a></li>
+    <li><a href="/students/0">Partial Student List</a></li>
     <li><a href="/parents">All Parents</a></li>
   </ul>
 </body>

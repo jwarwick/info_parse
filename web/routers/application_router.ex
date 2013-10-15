@@ -20,7 +20,6 @@ defmodule ApplicationRouter do
   get "/directory" do
     conn = conn.assign(:title, "School Directory")
     conn = conn.assign(:classrooms, InfoParse.Directory.ordered_classrooms)
-    conn = conn.assign(:start_student_id, 0)
     render conn, "directory.html"
   end
 
@@ -35,6 +34,13 @@ defmodule ApplicationRouter do
   get "/students" do
     conn = conn.assign(:title, "Students")
     conn = conn.assign(:students, InfoParse.Directory.ordered_students)
+    render conn, "students.html"
+  end
+
+  get "/students/:start_id" do
+    start_id = binary_to_integer(conn.params[:start_id])
+    conn = conn.assign(:title, "Students (starting from student_id #{start_id})")
+    conn = conn.assign(:students, InfoParse.Directory.ordered_students(start_id))
     render conn, "students.html"
   end
 
