@@ -125,7 +125,7 @@ defmodule InfoParse.Import do
   end
 
   defp make_reference({k, v}) when k in ["classroom", "bus"] do
-    result = String.to_integer(v)
+    result = Integer.parse(v)
     case result do 
       {i, _rest} -> {k, i}
       :error -> {k, nil}

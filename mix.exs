@@ -23,8 +23,8 @@ defmodule InfoParse.Mixfile do
     [ 
       { :cowboy, github: "extend/cowboy" },
       { :dynamo, github: "elixir-lang/dynamo" },
+      { :postgrex, github: "ericmj/postgrex" },
       { :ecto, github: "elixir-lang/ecto" },
-      { :pgsql, github: "semiocast/pgsql" },
       { :exjson, github: "guedes/exjson" },
       { :ex_doc, github: "elixir-lang/ex_doc" }
     ]
