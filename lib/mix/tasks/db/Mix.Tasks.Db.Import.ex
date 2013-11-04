@@ -1,6 +1,5 @@
 defmodule Mix.Tasks.Db.Import do
   use Mix.Task
-  alias Ecto.Adapters.Postgres
 
   require InfoGather.Repo
 
