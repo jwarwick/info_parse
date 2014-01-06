@@ -113,7 +113,7 @@ defmodule InfoParse.Import do
 
   # assumes list is ordered (ie [{a1, v}, {b1, v}, {a2, v}, {b2, v}]
   defp chunks_by_number(list) do
-    Enum.chunks_by(list, fn({k, _v}) -> String.last(k) end)
+    Enum.chunk_by(list, fn({k, _v}) -> String.last(k) end)
   end
 
   defp partition_notes(list) do

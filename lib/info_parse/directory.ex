@@ -75,7 +75,7 @@ defmodule InfoParse.Directory do
                  order_by: [p.lastname, p.firstname],
                  select: {p.lastname, p.firstname, p.email, p.phone, p.address_id, p.notes})
     InfoGather.Repo.all(query)
-      |> Enum.chunks_by(fn({_, _, _, _, addr_id, _}) -> addr_id end)
+      |> Enum.chunk_by(fn({_, _, _, _, addr_id, _}) -> addr_id end)
       |> Enum.map(&add_address(&1))
   end
 
